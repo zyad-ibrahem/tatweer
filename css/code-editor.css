@@ -1,0 +1,121 @@
+/* تصميم أساسي لجسم الصفحة */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* تصميم العنوان */
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+/* تصميم أزرار التحميل */
+input[type="file"],
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* تصميم لوحة تحرير الأكواد */
+.editors-container {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  width: 90%;
+  max-width: 1200px;
+  margin-bottom: 20px;
+}
+
+.editor-section {
+  flex: 1;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.editor-section h2 {
+  margin: 0;
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border-radius: 5px 5px 0 0;
+  font-size: 1.2em;
+}
+
+.CodeMirror {
+  border: none;
+  border-radius: 0 0 5px 5px;
+  height: 300px;
+}
+
+/* تصميم قائمة القوالب وأزرار الإضافة والتعديل */
+.template-selector,
+.add-template {
+  margin-bottom: 20px;
+}
+
+.template-selector select,
+.add-template input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.add-template button {
+  margin-left: 10px;
+}
+
+.output-container {
+  width: 90%;
+  max-width: 1200px;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  height: 400px;
+  overflow: auto;
+  background: white;
+}
+
+/* تصميم منطقة إدخال الرابط لتحميل الملفات */
+#fileUpload,
+#fileUrl {
+  margin-bottom: 10px;
+}
+
+label {
+  font-size: 1em;
+  margin-right: 10px;
+}
+
+select {
+  padding: 5px;
+  font-size: 1em;
+}

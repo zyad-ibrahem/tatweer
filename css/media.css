@@ -1,0 +1,43 @@
+@media (max-width: 929px) {
+  header {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  header ul {
+    height: 0;
+    margin: 0;
+    transition: var(--normal-transition);
+    overflow: hidden;
+  }
+  header ul li {
+    display: block;
+    margin-top: 20px;
+  }
+  header .menu-sign {
+    display: block;
+  }
+  header ul.active {
+    margin: 14px 0;
+    height: 245px;
+  }
+}
+
+@media (max-width: 480px) {
+  .course-card {
+    width: 100%;
+  }
+  .courses-container {
+    flex-direction: column; /* العودة إلى الاتجاه العمودي على الشاشات الصغيرة جدًا */
+    align-items: center; /* محاذاة العناصر إلى اليسار */
+  }
+  #articles-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .article-card {
+    width: 80%;
+  }
+}
