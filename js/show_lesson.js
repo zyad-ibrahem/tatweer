@@ -1,28 +1,27 @@
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+let courseId = urlParams.get("courseId") ? +urlParams.get("courseId") : 0;
+let lessonId = urlParams.get("courseId") ? +urlParams.get("lessonId") : 0;
 let dataLength;
-let articleId;
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("../json/articles.json")
+  fetch(`../json/all_courses/course_${courseId}.json`)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       return response.json();
     })
-    .then((articlesData) => {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      articleId = urlParams.get("articleId") ? +urlParams.get("articleId") : 0;
-      dataLength = articlesData.length;
-      for (let i = 0; i < articlesData.length; i++) {
-        if (articlesData[i].id === articleId) {
-          const articleTitle = document.getElementById("article-title");
-          const articleDiscription = document.getElementById(
-            "article-discription"
-          );
-          const articleContent = document.getElementById("article-content");
-          articleContent.innerHTML = articlesData[i].content;
-          articleTitle.innerHTML = articlesData[i].title;
-          articleDiscription.innerHTML = articlesData[i].description;
+    .then((coursesData) => {
+      dataLength = coursesData.length;
+      for (let i = 0; i < coursesData.length; i++) {
+        if (coursesData[i].id === lessonId) {
+          const courseTitle = document.getElementById("course-title");
+          const courseDiscription =
+            document.getElementById("course-discription");
+          const courseContent = document.getElementById("course-content");
+          courseContent.innerHTML = coursesData[i].content;
+          courseTitle.innerHTML = coursesData[i].title;
+          courseDiscription.innerHTML = coursesData[i].description;
           const codeSections = Array.from(
             document.getElementsByClassName("code-section")
           );
@@ -53,8 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
             noneProps.split(",").forEach((prop) => {
               switch (prop) {
                 case "copy":
-                  document.getElementsByClassName("-" + "copy")[i].style.display =
-                    "none";
+                  document.getElementsByClassName("-" + "copy")[
+                    i
+                  ].style.display = "none";
                   break;
                 case "open":
                   document.getElementsByClassName("-" + "open")[
@@ -102,8 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           break;
         } else {
-          const articleContent = document.getElementById("article-content");
-          articleContent.innerHTML = `
+          const courseContent = document.getElementById("course-content");
+          courseContent.innerHTML = `
             <p style="font-size: 25px;">هذه الصفحه غير متاحة. <br /> جرب:</p>
             <button style="
             display: inline-block;
@@ -146,22 +146,22 @@ let nextBtn = document.getElementById("next");
 let nSpan = document.getElementById("num");
 
 window.addEventListener("load", () => {
-  if (articleId >= dataLength) {
+  if (lessonId >= dataLength) {
     nextBtn.classList.add("not-active");
   }
-  if (articleId <= 1) {
+  if (lessonId <= 1) {
     preBtn.classList.add("not-active");
   }
-  nSpan.textContent = articleId;
+  nSpan.textContent = lessonId;
 
   preBtn.onclick = () => {
-    const data = { articleId: articleId - 1 };
+    const data = { courseId: courseId, lessonId: lessonId - 1 };
     const queryString = new URLSearchParams(data).toString();
-    window.location.href = `article-content.html?${queryString}`;
+    window.location.href = `lesson.html?${queryString}`;
   };
   nextBtn.onclick = () => {
-    const data = { articleId: articleId + 1 };
+    const data = { courseId: courseId, lessonId: lessonId + 1 };
     const queryString = new URLSearchParams(data).toString();
-    window.location.href = `article-content.html?${queryString}`;
+    window.location.href = `lesson.html?${queryString}`;
   };
 });

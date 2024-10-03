@@ -25,10 +25,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const courseCard = document.createElement("div");
         courseCard.classList.add("course-card");
 
+        const data = {
+          courseId: course.id,
+          courseName: course.name,
+          courseDescription: course.description,
+        };
+        const queryString = new URLSearchParams(
+          data
+        ).toString();
+
         courseCard.innerHTML = `
                 <img src="${course.image.src}" alt="${course.image.alt}" class="course-image">
                 <div class="header-description">
-                  <a href="#">${course.name}</a>
+                  <a href="courses-lessons.html?${queryString}">${course.name}</a>
                 </div>
         `;
 

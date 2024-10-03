@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>محرر البلكات اكادمية تطوير</title>
+    <link rel="icon" href="image/icon.png" />
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/javascript.min.js"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      #blocklyDiv {
+        height: 480px;
+        width: 75%;
+        float: left;
+      }
+      #codeArea {
+        width: 25%;
+        height: 480px;
+        float: left;
+        padding: 10px;
+        box-sizing: border-box;
+        background-color: #f7f7f7;
+        border-left: 2px solid #ccc;
+        overflow-y: auto;
+      }
+      #outputArea {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #e7f3fe;
+        border: 1px solid #b3d4fc;
+        height: 100px;
+        overflow-y: auto;
+      }
+      button {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="text-align: center">محرر البلكات اكادمية تطوير</h1>
+
+    <div id="blocklyDiv"></div>
+
+    <div id="codeAreaContainer">
+      <pre id="codeArea" contenteditable="false"></pre>
+      <button id="runButton">Run Block Code</button>
+      <div id="outputArea"></div>
+      <!-- قسم الإخراج -->
+    </div>
+
+    <script>
+      // إنشاء مساحة العمل Blockly
+      var workspace = Blockly.inject("blocklyDiv", {
+        toolbox: `
+        <xml xmlns="https://developers.google.com/blockly/xml">
+          <category name="Logic" colour="#5C81A6">
+            <block type="controls_if"></block>
+            <block type="logic_compare"></block>
+            <block type="logic_operation"></block>
+            <block type="logic_negate"></block>
+            <block type="logic_boolean"></block>
+            <block type="logic_null"></block>
+            <block type="logic_ternary"></block>
+          </category>
+          <category name="Loops" colour="#5CA65C">
+            <block type="controls_repeat_ext">
+              <value name="TIMES">
+                <block type="math_number">
+                  <field name="NUM">10</field>
+                </block>
+              </value>
+            </block>
+            <block type="controls_whileUntil"></block>
+            <block type="controls_for"></block>
+            <block type="controls_forEach"></block>
+            <block type="controls_flow_statements"></block>
+          </category>
+          <category name="Math" colour="#5C68A6">
+            <block type="math_number"></block>
+            <block type="math_arithmetic"></block>
+            <block type="math_single"></block>
+            <block type="math_trig"></block>
+            <block type="math_constant"></block>
+            <block type="math_number_property"></block>
+            <block type="math_round"></block>
+            <block type="math_on_list"></block>
+            <block type="math_modulo"></block>
+            <block type="math_constrain"></block>
+            <block type="math_random_int"></block>
+            <block type="math_random_float"></block>
+          </category>
+          <category name="Text" colour="#5CA68D">
+            <block type="text"></block>
+            <block type="text_join"></block>
+            <block type="text_append"></block>
+            <block type="text_length"></block>
+            <block type="text_isEmpty"></block>
+            <block type="text_indexOf"></block>
+            <block type="text_charAt"></block>
+            <block type="text_getSubstring"></block>
+            <block type="text_changeCase"></block>
+            <block type="text_trim"></block>
+            <block type="text_print"></block>
+            <block type="text_prompt_ext"></block>
+          </category>
+          <category name="Lists" colour="#745CA6">
+            <block type="lists_create_empty"></block>
+            <block type="lists_create_with"></block>
+            <block type="lists_repeat"></block>
+            <block type="lists_length"></block>
+            <block type="lists_isEmpty"></block>
+            <block type="lists_indexOf"></block>
+            <block type="lists_getIndex"></block>
+            <block type="lists_setIndex"></block>
+            <block type="lists_getSublist"></block>
+            <block type="lists_split"></block>
+            <block type="lists_sort"></block>
+          </category>
+          <category name="Variables" custom="VARIABLE" colour="#A65C81"></category>
+          <category name="Functions" custom="PROCEDURE" colour="#A65C9D"></category>
+          <category name="Color" colour="#A6745C">
+            <block type="colour_picker"></block>
+            <block type="colour_random"></block>
+            <block type="colour_rgb"></block>
+            <block type="colour_blend"></block>
+          </category>
+        </xml>
+      `,
+      });
+
+      // وظيفة توليد الكود
+      function generateCode() {
+        var code = Blockly.JavaScript.workspaceToCode(workspace);
+        document.getElementById("codeArea").textContent = code; // عرض الكود في <pre>
+      }
+
+      // إضافة حدث للمراقبة عند تغيير البلوكات
+      workspace.addChangeListener(generateCode); // توليد الكود تلقائيًا عند أي تغيير في مساحة العمل
+
+      // تنفيذ الكود الناتج
+      document
+        .getElementById("runButton")
+        .addEventListener("click", function () {
+          const code = Blockly.JavaScript.workspaceToCode(workspace);
+          document.getElementById("outputArea").textContent = ""; // تنظيف قسم الإخراج
+          try {
+            // استخدام Function لتشغيل الكود
+            const output = new Function(code)(); // تنفيذ الكود
+            document.getElementById("outputArea").textContent = output; // عرض الناتج
+          } catch (e) {
+            document.getElementById("outputArea").textContent =
+              "Error: " + e.message; // عرض أي خطأ
+          }
+        });
+    </script>
+  </body>
+</html>

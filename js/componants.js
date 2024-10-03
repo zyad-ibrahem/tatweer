@@ -28,9 +28,12 @@ document.getElementById("-mainHeader").innerHTML = `
       <a href="articles.html">مقالات</a>
     </li>
     <li>
-      <a href="code-editor.html">محرر الأكواد</a>
+      <a target="_blank" href="code-editor.html">محرر الأكواد</a>
     </li>
-  </ul>
+    <li>
+      <a target="_blank" href="blocks.html">محرر البلكات</a>
+    </li>
+    </ul>
 `;
 document.getElementById("-mainFooter").innerHTML = `
   <p dir="ltr">Made with Zyad Ibrahem &copy; <span id="year"></span></p>
@@ -66,3 +69,71 @@ goTopBTN.onclick = () => {
     left: 0,
   });
 };
+
+function checkOffline() {
+  if (!navigator.onLine) {
+    window.document.getElementsByTagName("html")[0].innerHTML = `
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>لا يوجد اتصال</title>
+          <style>
+            .offline {
+              margin: 50px 200px;
+              text-align: right;
+              font-size: 21px;
+              direction: rtl;
+              h3 {
+                color: var(--button-bg);
+              }
+              h4 {
+                color: #c82333;
+              }
+              li {
+                color: #4f46e5;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="offline" id="offline">
+            <h3>لا يوجد انترنت</h3>
+            <h4>جرب:</h4>
+            <ul>
+              <li>تأكد من اتصلك بالمُوجِّه (router)</li>
+              <li>تأكد من وجود انترنت</li>
+            </ul>
+            <button
+              style="
+                background-color: #dc3545;
+                color: #ffffff;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.9em;
+                transition: background-color 0.3s;
+              "
+              onclick="window.location.reload()"
+            >
+              اعادة تحميل
+            </button>
+          </div>
+          <script>
+            function checkOnline() {
+              if (navigator.onLine) {
+                location.reload()
+                window.location.href = "index.html";
+              }
+            }
+            checkOnline();
+            window.addEventListener("online", checkOnline);
+          </script>
+        </body>
+    `;
+  }
+}
+
+checkOffline();
+
+window.addEventListener("offline", checkOffline);

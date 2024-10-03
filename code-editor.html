@@ -1,134 +1,223 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>محرر كود متعدد الأقسام</title>
+    <title>محرر اكواد أكادمية تطوير</title>
+    <link rel="icon" href="image/icon.png" />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/codemirror.min.css"
+      href="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.0/min/vs/editor/editor.main.css"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/theme/dracula.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/theme/solarized.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/theme/solarized-light.min.css"
-    />
-
-    <link rel="stylesheet" href="css/code-editor.css" />
-    <link rel="stylesheet" href="css/styles.css" />
     <style>
+      body {
+        direction: ltr;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+      }
+      nav {
+        background: #333;
+        padding: 10px;
+        display: flex;
+        gap: 10px;
+      }
+      nav button {
+        color: white;
+        background: #444;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+      }
+      nav button:hover {
+        background: #555;
+      }
+      .editor-container {
+        display: flex;
+        flex: 1;
+      }
+
+      .editor {
+        width: 200px;
+        height: calc(
+          100vh - 200px
+        ); /* Adjust the value based on the height of your nav and console */
+        border-right: 1px solid #ccc;
+      }
+
+      .output {
+        width: 34%;
+        height: 100%;
+        padding: 10px;
+        border-left: 1px solid #ccc;
+        overflow: auto;
+        background: #f9f9f9;
+      }
+      .console {
+        height: 150px;
+        background: #000;
+        color: #fff;
+        padding: 10px;
+        overflow: auto;
+      }
       footer {
-        width: 100%;
-        margin-top: 40px;
+        display: none;
       }
     </style>
   </head>
   <body>
-    <h1 style="margin-top: 130px">محرر كود متعدد الأقسام</h1>
+    <nav>
+      <button onclick="saveCode()">Save</button>
+      <button onclick="loadCode()">Load</button>
+    </nav>
 
-    <div class="template-selector">
-      <label for="template">اختر قالب:</label>
-      <select id="template" onchange="loadTemplate()">
-        <option value="">اختر قالب</option>
-        <!-- قوالب مخصصة سيتم تحميلها هنا -->
-      </select>
-      <button onclick="deleteTemplate()">حذف القالب المحدد</button>
-    </div>
-
-    <div class="add-template">
-      <h2>إضافة قالب جديد</h2>
-      <label for="templateName">اسم القالب:</label>
-      <input type="text" id="templateName" />
-      <button onclick="saveTemplate()">حفظ القالب</button>
-    </div>
-
-    <div class="editors-container">
-      <div class="editor-section">
-        <h2>HTML</h2>
-        <textarea id="html-editor">// اكتب HTML هنا</textarea>
+    <div class="editor-container">
+      <div>
+        <select id="htmlLanguageSelect" onchange="changeLanguage('html')">
+          <option value="html">HTML</option>
+          <option value="pug">PugJS</option>
+        </select>
+        <div id="html-editor" class="editor"></div>
       </div>
-      <div class="editor-section">
-        <h2>CSS</h2>
-        <textarea id="css-editor">// اكتب CSS هنا</textarea>
+      <div>
+        <select id="cssLanguageSelect" onchange="changeLanguage('css')">
+          <option value="css">CSS</option>
+          <option value="scss">SCSS</option>
+          <option value="sass">SASS</option>
+          <option value="less">LESS</option>
+        </select>
+        <div id="css-editor" class="editor"></div>
       </div>
-      <div class="editor-section">
-        <h2>JavaScript</h2>
-        <textarea id="js-editor">// اكتب JavaScript هنا</textarea>
+      <div>
+        <select id="jsLanguageSelect" onchange="changeLanguage('js')">
+          <option value="javascript">JavaScript</option>
+          <option value="react">React</option>
+          <option value="vue">Vue</option>
+          <option value="angular">Angular</option>
+        </select>
+        <div id="js-editor" class="editor"></div>
       </div>
+      <div id="output" class="output"></div>
     </div>
 
-    <div>
-      <button onclick="downloadCode('html')">تحميل HTML</button>
-      <button onclick="downloadCode('css')">تحميل CSS</button>
-      <button onclick="downloadCode('js')">تحميل JavaScript</button>
-    </div>
+    <div class="console" id="console"></div>
 
-    <div>
-      <button onclick="downloadAll()">تحميل الأكواد كمجموعة</button>
-    </div>
-
-    <div>
-      <label for="fileUpload">تحميل ملف:</label>
-      <input
-        type="file"
-        id="fileUpload"
-        accept=".html,.css,.js"
-        onchange="handleFileUpload(event)"
-      />
-    </div>
-
-    <div>
-      <label for="fileUrl">تحميل من رابط:</label>
-      <input type="text" id="fileUrl" placeholder="أدخل رابط الملف" />
-      <button onclick="loadFromUrl()">تحميل</button>
-    </div>
-
-    <div class="buttons-container">
-      <button onclick="runCode()">تشغيل الكود</button>
-      <button onclick="saveCode()">حفظ الكود</button>
-      <button onclick="loadCode()">تحميل الكود</button>
-    </div>
-
-    <div class="theme-selector">
-      <label for="theme">اختر الثيم:</label>
-      <select id="theme" onchange="changeTheme()">
-        <option value="dracula">Dracula</option>
-        <option value="default">افتراضي</option>
-        <option value="monokai">Monokai</option>
-        <option value="solarized">Solarized</option>
-        <option value="solarized light">Solarized Light</option>
-      </select>
-    </div>
-
-    <div class="output-container">
-      <iframe
-        id="output"
-        style="width: 100%; height: 100%; border: none"
-      ></iframe>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/mode/htmlmixed/htmlmixed.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/mode/css/css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/addon/edit/closebrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/addon/lint/lint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jshint/2.13.4/jshint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/addon/lint/javascript-lint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/addon/hint/show-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/addon/hint/css-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/addon/hint/javascript-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/addon/hint/html-hint.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.0/min/vs/loader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="js/code-editor.js"></script>
-    <script src="js/componants.js"></script>
+    <script>
+      let htmlEditor, cssEditor, jsEditor;
+
+      require.config({
+        paths: {
+          vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.34.0/min/vs",
+        },
+      });
+      require(["vs/editor/editor.main"], function () {
+        htmlEditor = monaco.editor.create(
+          document.getElementById("html-editor"),
+          {
+            language: "html",
+            automaticLayout: true,
+          }
+        );
+        cssEditor = monaco.editor.create(
+          document.getElementById("css-editor"),
+          {
+            language: "css",
+            automaticLayout: true,
+          }
+        );
+        jsEditor = monaco.editor.create(document.getElementById("js-editor"), {
+          language: "javascript",
+          automaticLayout: true,
+        });
+
+        // Automatic run on content change
+        htmlEditor.onDidChangeModelContent(runCode);
+        cssEditor.onDidChangeModelContent(runCode);
+        jsEditor.onDidChangeModelContent(runCode);
+      });
+
+      function runCode() {
+        const htmlCode = htmlEditor.getValue();
+        const cssCode = cssEditor.getValue();
+        const jsCode = jsEditor.getValue();
+
+        const output = document.getElementById("output");
+        output.innerHTML = `<style>${cssCode}</style>${htmlCode}`;
+
+        const consoleOutput = document.getElementById("console");
+        consoleOutput.innerHTML += "Running code...\n";
+
+        try {
+          // Execute JS code based on selected framework
+          if (document.getElementById("jsLanguageSelect").value === "react") {
+            const element = React.createElement(
+              "div",
+              null,
+              "React is running!"
+            );
+            ReactDOM.render(element, output);
+          } else if (
+            document.getElementById("jsLanguageSelect").value === "vue"
+          ) {
+            new Vue({
+              el: output,
+              data: { message: "Vue is running!" },
+            });
+          } else if (
+            document.getElementById("jsLanguageSelect").value === "angular"
+          ) {
+            // Angular logic would require a full setup, omitted for simplicity
+            consoleOutput.innerHTML +=
+              "Angular support is currently not implemented.\n";
+          } else {
+            new Function(jsCode)();
+          }
+          consoleOutput.innerHTML += "Code executed successfully.\n";
+        } catch (error) {
+          consoleOutput.innerHTML += `Error: ${error.message}\n`;
+        }
+      }
+
+      function saveCode() {
+        localStorage.setItem("htmlCode", htmlEditor.getValue());
+        localStorage.setItem("cssCode", cssEditor.getValue());
+        localStorage.setItem("jsCode", jsEditor.getValue());
+        alert("Code saved!");
+      }
+
+      function loadCode() {
+        htmlEditor.setValue(localStorage.getItem("htmlCode") || "");
+        cssEditor.setValue(localStorage.getItem("cssCode") || "");
+        jsEditor.setValue(localStorage.getItem("jsCode") || "");
+        alert("Code loaded!");
+      }
+
+      function changeLanguage(type) {
+        let language = "";
+        if (type === "html") {
+          language = document.getElementById("htmlLanguageSelect").value;
+          htmlEditor.setModel(
+            monaco.editor.createModel(htmlEditor.getValue(), language)
+          );
+        } else if (type === "css") {
+          language = document.getElementById("cssLanguageSelect").value;
+          cssEditor.setModel(
+            monaco.editor.createModel(cssEditor.getValue(), language)
+          );
+        } else if (type === "js") {
+          language = document.getElementById("jsLanguageSelect").value;
+          jsEditor.setModel(
+            monaco.editor.createModel(jsEditor.getValue(), language)
+          );
+        }
+      }
+    </script>
+
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/vue@2"></script>
   </body>
 </html>

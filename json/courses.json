@@ -15,24 +15,6 @@
       "alt": "دورة JavaScript"
     },
     "name": "دورة JavaScript",
-    "description": "ستكتسب المهارات اللازمة في JavaScript."
-  },
-  {
-    "id": 3,
-    "image": {
-      "src": "image/javascript.jpg",
-      "alt": "دورة JavaScript للمتقدمين"
-    },
-    "name": "دورة JavaScript للمتقدمين",
-    "description": "ستكتسب المهارات المتقدمه في JavaScript."
-  },
-  {
-    "id": 4,
-    "image": {
-      "src": "image/web-development.jpg",
-      "alt": "دورة JavaScript للمتقدمين"
-    },
-    "name": "دورة تطوير الويب للمتقدمين",
     "description": "تعلم أساسيات HTML، CSS، وJavaScript. ستكتسب المهارات اللازمة لإنشاء مواقع ويب تفاعلية وعصرية."
   }
 ]
