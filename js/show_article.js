@@ -30,12 +30,12 @@ document.addEventListener("DOMContentLoaded", () => {
             let codeLang = codeSections[i].getAttribute("$lang");
             let code = codeSections[i].getAttribute("$code");
             codeSections[i].innerHTML = `
-        <div class="lang">${codeLang}<div class="bullte"></div></div>
-        <code>
-            <button class="copy" onclick="copy(${i})" $id="${i}">انسخ</button>
-            <pre class="code" id="${i}"></pre>
-          </code>
-          `;
+            <div class="lang">${codeLang}<div class="bullte"></div></div>
+            <code>
+              <button class="copy" onclick="copy(${i})" $id="${i}">انسخ</button>
+              <pre class="code" id="${i}"></pre>
+            </code>
+            `;
             let codePre = document.getElementsByClassName("code")[i];
             codePre.textContent = code;
           }
